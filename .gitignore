@@ -1,0 +1,14 @@
+.dart_tool/
+.flutter-plugins*
+build/
+.tools/
+android/local.properties
+android/.gradle/
+*.iml
+.idea/
+dist/
+20260917_071940.jpg
+*.jks
+*.keystore
+android/key.properties
+artifacts/*.log
