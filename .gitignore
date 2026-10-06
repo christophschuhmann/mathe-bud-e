@@ -16,3 +16,4 @@ artifacts/*.log
 flutter_*.log
 hs_err_pid*.log
 android/hs_err_pid*.log
+replay_pid*.log
