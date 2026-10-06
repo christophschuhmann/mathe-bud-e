@@ -36,7 +36,7 @@ if ($Target -in @('All','Windows')) {
     Compress-Archive -Path dist/Windows/* -DestinationPath dist/Mathe-Bud-E-Windows.zip -Force
 }
 if ($Target -in @('All','Android')) {
-    Invoke-Flutter -FlutterArgs @('build', 'apk', '--release')
+    Invoke-Flutter -FlutterArgs @('build', 'apk', '--release', '--no-shrink')
     Copy-Item -LiteralPath build/app/outputs/flutter-apk/app-release.apk -Destination dist/Mathe-Bud-E.apk -Force
 }
 Write-Host 'Fertig. Die App-Dateien liegen in dist/.'

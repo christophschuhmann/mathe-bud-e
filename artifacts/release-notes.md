@@ -1,4 +1,11 @@
-# Mathe Bud-E 1.0
+# Mathe Bud-E 1.1
+
+## Neu
+
+- **Überspringen:** In allen Modi unten erreichbar und sofort zur nächsten Aufgabe. Zählt als falsch, ohne Punkt.
+- **Tipp holen:** Im Training und Speedrun dauerhaft vor dem Antworten erreichbar, auch auf kleinen Bildschirmen.
+- **Ein Punkt pro richtiger Antwort**, auch mit Tipp. Level- und Serienboni entfallen.
+- Alte Gesamtpunkte und Run-Ergebnisse werden automatisch auf einen Punkt pro richtiger Antwort umgerechnet.
 
 Deutschsprachiger Kopfrechentrainer für Android und Windows, ohne Konto oder Internetverbindung.
 
@@ -16,4 +23,6 @@ Deutschsprachiger Kopfrechentrainer für Android und Windows, ohne Konto oder In
 
 Die ausführliche Anleitung für Einsteiger steht in der [README](https://github.com/christophschuhmann/mathe-bud-e#readme). `SHA256SUMS.txt` enthält Prüfsummen der Downloads.
 
-Flutter-Analyse ohne Befund, 16 automatisierte Tests bestanden, beide Release-Versionen erfolgreich kompiliert. Ein Test auf einem echten Android-Handy steht noch aus. Die APK ist für die direkte GitHub-Verteilung mit einem lokalen Entwicklungsschlüssel signiert.
+21 automatisierte Tests bestanden, einschließlich Tipps, Überspringen, einheitlicher Punktwertung und Fortschrittsmigration. Codeanalyse ohne Befund.
+
+Die APK ist für die direkte GitHub-Verteilung mit dem bisherigen lokalen Entwicklungsschlüssel signiert und lässt sich über die vorhandene Version installieren. Ein Test auf einem echten Android-Handy steht noch aus.

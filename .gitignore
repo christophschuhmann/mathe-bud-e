@@ -1,6 +1,7 @@
 .dart_tool/
 .flutter-plugins*
 build/
+/build
 .tools/
 android/local.properties
 android/.gradle/
@@ -12,3 +13,6 @@ dist/
 *.keystore
 android/key.properties
 artifacts/*.log
+flutter_*.log
+hs_err_pid*.log
+android/hs_err_pid*.log

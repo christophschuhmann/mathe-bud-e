@@ -1064,7 +1064,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 18),
               const Text(
-                'Speedruns bleiben vergleichbar: Start auf Level 1, 8 richtige in Folge für den Aufstieg, 5 Fehler für den Abstieg. Antworten mit Tipp geben keine Punkte.',
+                'Speedruns bleiben vergleichbar: Start auf Level 1, 8 richtige in Folge für den Aufstieg, 5 Fehler für den Abstieg. Jede richtige Antwort gibt einen Punkt, auch mit Tipp.',
                 style: TextStyle(color: muted, fontSize: 12),
               ),
               const SizedBox(height: 20),
@@ -1264,7 +1264,7 @@ class _SetupSheetState extends State<SetupSheet> {
           const Panel(
             color: lime,
             child: Text(
-              'Jede richtige Antwort ohne Tipp bringt Level × 10 Punkte. Ab der zweiten richtigen Antwort in Folge gibt’s einen Serienbonus (maximal 20).',
+              'Jede richtige Antwort bringt genau einen Punkt, auch mit Tipp. Falsche und übersprungene Aufgaben bringen keinen Punkt.',
               style: TextStyle(fontSize: 13, height: 1.5),
             ),
           ),
@@ -1638,9 +1638,7 @@ class _RunScreenState extends State<RunScreen> {
     }
     final oldLevel = level;
     final correct = !skip && problem.accepts(input);
-    final points = correct && !assisted
-        ? oldLevel * 10 + min(20, adaptive.streak * 2).toInt()
-        : 0;
+    final points = correct ? 1 : 0;
     var changed = 0;
     if (c.mode != RunMode.test) {
       if (!correct) {
@@ -1664,7 +1662,6 @@ class _RunScreenState extends State<RunScreen> {
     );
     widget.progress.recordAnswer(
       isCorrect: correct,
-      points: c.mode == RunMode.test ? (correct ? 10 : 0) : points,
       level: highest,
       topic: problem.topic.name,
     );
@@ -1706,6 +1703,11 @@ class _RunScreenState extends State<RunScreen> {
     });
     if (scroll.hasClients) scroll.jumpTo(0);
     focus.requestFocus();
+  }
+
+  void skip() {
+    submit(skip: true);
+    if (submitted && !finished) next();
   }
 
   Future<void> hint() async {
@@ -1824,24 +1826,72 @@ class _RunScreenState extends State<RunScreen> {
           top: false,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 12),
-            child: FilledButton.icon(
-              onPressed: submitted
-                  ? next
-                  : input.isEmpty
-                  ? null
-                  : submit,
-              icon: Icon(
-                submitted ? Icons.arrow_forward_rounded : Icons.check_rounded,
-              ),
-              label: Text(
-                submitted
-                    ? c.mode == RunMode.test && attempts.length == test.length
-                          ? 'Ergebnis ansehen'
-                          : 'Weiter'
-                    : c.mode == RunMode.test
-                    ? 'Antwort abgeben'
-                    : 'Antwort prüfen',
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!submitted)
+                  Row(
+                    children: [
+                      if (c.mode != RunMode.test)
+                        Expanded(
+                          child: TextButton.icon(
+                            onPressed: hint,
+                            icon: const Icon(
+                              Icons.lightbulb_outline_rounded,
+                              size: 18,
+                            ),
+                            label: Text(
+                              assisted ? 'Tipp ansehen' : 'Tipp holen',
+                            ),
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                              ),
+                              textStyle: Theme.of(
+                                context,
+                              ).textTheme.labelMedium,
+                            ),
+                          ),
+                        ),
+                      Expanded(
+                        child: TextButton.icon(
+                          onPressed: skip,
+                          icon: const Icon(Icons.skip_next_rounded, size: 18),
+                          label: const Text('Überspringen'),
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            textStyle: Theme.of(context).textTheme.labelMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: submitted
+                        ? next
+                        : input.isEmpty
+                        ? null
+                        : submit,
+                    icon: Icon(
+                      submitted
+                          ? Icons.arrow_forward_rounded
+                          : Icons.check_rounded,
+                    ),
+                    label: Text(
+                      submitted
+                          ? c.mode == RunMode.test &&
+                                    attempts.length == test.length
+                                ? 'Ergebnis ansehen'
+                                : 'Weiter'
+                          : c.mode == RunMode.test
+                          ? 'Antwort abgeben'
+                          : 'Antwort prüfen',
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -2012,40 +2062,6 @@ class _RunScreenState extends State<RunScreen> {
                   ),
                 const SizedBox(height: 16),
                 if (!submitted) ...[
-                  Row(
-                    children: [
-                      if (c.mode != RunMode.test)
-                        Expanded(
-                          child: TextButton.icon(
-                            onPressed: hint,
-                            icon: const Icon(
-                              Icons.lightbulb_outline_rounded,
-                              size: 18,
-                            ),
-                            label: Text(
-                              assisted
-                                  ? 'Tipp geöffnet · 0 Punkte'
-                                  : 'Rechentipp',
-                            ),
-                          ),
-                        ),
-                      if (c.mode == RunMode.test)
-                        const Expanded(
-                          child: Text(
-                            'Enter = Antwort abgeben',
-                            style: TextStyle(fontSize: 11, color: muted),
-                          ),
-                        ),
-                      TextButton(
-                        onPressed: () => submit(skip: true),
-                        child: const Text(
-                          'Weiß ich noch nicht',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
                   keypad(),
                 ] else ...[
                   Panel(
@@ -2334,7 +2350,7 @@ class ResultScreen extends StatelessWidget {
                     await Clipboard.setData(
                       ClipboardData(
                         text:
-                            'Mathe Bud-E · ${config.minutes} Minuten · $score Punkte · Level $highest · $correct richtige Antworten · ${completed ? 'vollständig' : 'abgebrochen'} · Regeln: Level 1, 8 richtig/5 Fehler, Tipps ohne Punkte · v1',
+                            'Mathe Bud-E · ${config.minutes} Minuten · $score Punkte · Level $highest · $correct richtige Antworten · ${completed ? 'vollständig' : 'abgebrochen'} · Regeln: Level 1, 8 richtig/5 Fehler, 1 Punkt pro richtiger Antwort auch mit Tipp · v2',
                       ),
                     );
                     if (context.mounted) {

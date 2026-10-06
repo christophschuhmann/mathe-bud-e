@@ -36,6 +36,13 @@ class Progress extends ChangeNotifier {
       for (final run in j['runs'] as List? ?? []) {
         p.runs.add(Map<String, dynamic>.from(run as Map));
       }
+      if (j['scoringVersion'] != 2) {
+        p.xp = p.correct;
+        for (final run in p.runs) {
+          if (run['correct'] is int) run['score'] = run['correct'];
+        }
+        await p.save();
+      }
     } catch (_) {
       p.saveFailed = true;
     }
@@ -60,13 +67,12 @@ class Progress extends ChangeNotifier {
 
   void recordAnswer({
     required bool isCorrect,
-    required int points,
     required int level,
     required String topic,
   }) {
     answered++;
     if (isCorrect) correct++;
-    xp += points;
+    if (isCorrect) xp++;
     if (level > highestLevel) highestLevel = level;
     final t = topicStats.putIfAbsent(topic, () => [0, 0]);
     t[0]++;
@@ -86,6 +92,7 @@ class Progress extends ChangeNotifier {
 
   Future<void> save() {
     final raw = jsonEncode({
+      'scoringVersion': 2,
       'answered': answered,
       'correct': correct,
       'xp': xp,

@@ -2,7 +2,9 @@
 
 **[⬇ Android-App herunterladen (APK)](https://github.com/christophschuhmann/mathe-bud-e/releases/latest/download/Mathe-Bud-E.apk)** · **[⬇ Windows-App herunterladen (ZIP)](https://github.com/christophschuhmann/mathe-bud-e/releases/latest/download/Mathe-Bud-E-Windows.zip)**
 
-Die Downloads sind fertige App-Dateien. Du kannst sie ohne Programmierkenntnisse benutzen. Der Quellcode steht weiter unten im Repository; neue Versionen findest du bei [Releases](https://github.com/christophschuhmann/mathe-bud-e/releases).
+**Aktuelle Version: 1.1.0.** Die Links oben laden immer die neueste veröffentlichte APK beziehungsweise Windows-Version herunter. Neu: direkt überspringen, jederzeit Tipps holen und genau ein Punkt pro richtiger Antwort.
+
+Die Downloads sind fertige App-Dateien. Du kannst sie ohne Programmierkenntnisse benutzen. Der Quellcode steht weiter unten im Repository; neue Versionen findest du bei [Releases](https://github.com/christophschuhmann/mathe-bud-e/releases). Um Android zu aktualisieren, lade die neue APK herunter und öffne sie: Android bietet „Aktualisieren“ an. Deinstalliere die vorhandene App vorher nicht, damit dein Fortschritt erhalten bleibt. Auf Windows ersetze den alten App-Ordner durch das neue entpackte Paket; der Fortschritt liegt separat im Benutzerprofil.
 
 Ein deutscher Kopfrechentrainer mit Flutter für Windows und Android. Ohne Konto, Werbung oder Internetverbindung. Mit eigener Bildschirmtastatur, Hochformat auf Android und einer schmalen, skalierbaren Oberfläche auf Windows.
 
@@ -43,7 +45,7 @@ Falls Windows beim Öffnen eine SmartScreen-Rückfrage zeigt: Prüfe, dass die D
 1. Wähle **Training**, wenn du in Ruhe üben möchtest. Beginne mit **Level 1** oder wähle das passende Level. **Level 3** entspricht dem Kopfrechenblatt für Klasse 5/6.
 2. Tippe die Antwort über die großen Zahlentasten ein. Am PC funktioniert auch die Tastatur.
 3. Tippe auf **„Antwort prüfen“** und dann auf **„Weiter“**. Am PC geht beides mit **Enter**.
-4. Wenn du Hilfe brauchst, öffne **„Rechentipp“**. Nach einem Fehler gibt es **„Zeig mir, wie das geht“** mit einer einfachen Erklärung und Beispielschritten.
+4. Wenn du Hilfe brauchst, tippe unten auf **„Tipp holen“**. Du kannst den Tipp vor dem Antworten öffnen. Nach einem Fehler gibt es **„Zeig mir, wie das geht“** mit einer einfachen Erklärung und Beispielschritten. Mit **„Überspringen“** kommst du sofort zur nächsten Aufgabe.
 5. Mit **„Probe-Test“** bekommst du am Ende eine Note. Aktiviere dort **„Originaltest vom Foto“** für die 120 Aufgaben des Übungsblatts.
 6. Mit **„Speedrun“** sammelst du in fünf oder zehn Minuten Punkte. Unter **„Fortschritt“** findest du deine Ergebnisse und Rekorde. Die Daten bleiben lokal auf dem jeweiligen Gerät.
 
@@ -51,11 +53,11 @@ Falls Windows beim Öffnen eine SmartScreen-Rückfrage zeigt: Prüfe, dass die D
 
 ## Modi
 
-**Training:** Ohne Zeitlimit, Startlevel und Thema frei wählbar. Standardmäßig steigt das Level nach 8 richtigen Antworten in Folge und sinkt nach 5 Fehlern seit dem letzten Levelwechsel. Ein Fehler beendet die Erfolgsserie. Die Fehlersumme bleibt bis zum nächsten Levelwechsel bestehen. In den Einstellungen sind Aufstiegsschwellen von 5, 8 oder 10 und Abstiegsschwellen von 5 oder 10 wählbar. Bei einem einzelnen Thema sinkt das Level nur bis zu dessen Einstiegslevel. Gemischtes Training kann bis Level 1 zurückgehen. Rechenhilfen sind freiwillig und nach Fehlern deutlich angeboten. Eine richtige Antwort nach einem vorab geöffneten Tipp bringt keine Punkte und setzt die Erfolgsserie zurück.
+**Training:** Ohne Zeitlimit, Startlevel und Thema frei wählbar. Standardmäßig steigt das Level nach 8 richtigen Antworten in Folge und sinkt nach 5 Fehlern seit dem letzten Levelwechsel. Ein Fehler beendet die Erfolgsserie. Die Fehlersumme bleibt bis zum nächsten Levelwechsel bestehen. In den Einstellungen sind Aufstiegsschwellen von 5, 8 oder 10 und Abstiegsschwellen von 5 oder 10 wählbar. Bei einem einzelnen Thema sinkt das Level nur bis zu dessen Einstiegslevel. Gemischtes Training kann bis Level 1 zurückgehen. **„Tipp holen“** ist unten jederzeit vor dem Antworten erreichbar. Jede richtige Antwort zählt **genau einen Punkt**, auch mit Tipp. Eine mit Tipp gelöste Aufgabe setzt die Erfolgsserie für den Levelaufstieg zurück. **„Überspringen“** geht sofort zur nächsten Aufgabe; die übersprungene Aufgabe zählt als falsch und gibt keinen Punkt.
 
 **Probe-Test:** Feste Schwierigkeit und beliebiges verfügbares Thema, 20, 40 oder 120 Aufgaben. Standardlevel 3. Der Schalter „Originaltest vom Foto“ verwendet die 120 abgetippten Aufgaben aus `20260917_071940.jpg` in der ursprünglichen Reihenfolge. Antworten und übersprungene Aufgaben werden nacheinander gespeichert; Lösungen und Erklärungen erscheinen erst in der Auswertung. Es gibt kein Zeitlimit. Ein vorzeitig beendeter Test bewertet alle noch unbeantworteten Aufgaben als falsch.
 
-**Speedrun:** 5 oder 10 Minuten, immer gemischt ab Level 1. Einheitliche Schwellen: 8 richtige in Folge zum Aufstieg, 5 Fehler zum Abstieg. Pro richtiger Antwort ohne Hilfe gibt es `Level × 10` Punkte plus `2 × bisherige Erfolgsserie`, höchstens 20 Bonuspunkte. Die Uhr läuft während Hilfen, Dialogen und im Hintergrund weiter. Vorzeitig beendete Runs werden protokolliert, zählen aber nicht als Rekord. Rekorde sind nach Laufdauer getrennt. Ein kopierbarer Ergebnistext erlaubt Vergleiche mit Freunden; es gibt keine Online-Rangliste.
+**Speedrun:** 5 oder 10 Minuten, immer gemischt ab Level 1. Einheitliche Schwellen: 8 richtige in Folge zum Aufstieg, 5 Fehler zum Abstieg. Pro richtiger Antwort gibt es **genau einen Punkt**, unabhängig vom Level und auch mit Tipp. Es gibt keinen Serienbonus. Überspringen ist möglich und zählt als Fehler ohne Punkt. Die Uhr läuft während Hilfen, Dialogen und im Hintergrund weiter. Vorzeitig beendete Runs werden protokolliert, zählen aber nicht als Rekord. Rekorde sind nach Laufdauer getrennt. Ein kopierbarer Ergebnistext erlaubt Vergleiche mit Freunden; es gibt keine Online-Rangliste.
 
 ## Zehn Levels
 
@@ -86,6 +88,8 @@ Jede Aufgabe zählt einen Punkt. Kürzere Tests verwenden `richtig / Aufgaben ×
 
 ## Fortschritt
 
+Seit Version 1.1 gilt in allen Modi ein Punkt pro richtiger Antwort. Beim ersten Start der neuen Version werden alte Gesamtpunkte und Run-Punktzahlen automatisch anhand der gespeicherten richtigen Antworten auf diese Wertung umgerechnet. Ergebnisse, Einstellungen und Level bleiben erhalten.
+
 Antworten, Gesamtpunkte, höchste erreichte Stufe, Themenquoten, aktive Tage, Einstellungen und die letzten 100 Runs werden lokal mit `shared_preferences` gespeichert. Windows und Android haben jeweils ihren eigenen Fortschritt; es gibt keine Cloud-Synchronisation. Antworten werden während des Runs gespeichert, die Run-Zusammenfassung beim Abschließen. Beim Beenden des Prozesses mitten im Run bleiben bereits gespeicherte Antwortstatistiken erhalten, es entsteht aber keine abgeschlossene Run-Zusammenfassung.
 
 ## Entwickeln und bauen
@@ -98,7 +102,7 @@ flutter analyze
 flutter test --concurrency=1
 flutter run -d windows
 flutter build windows --release
-flutter build apk --release
+flutter build apk --release --no-shrink
 ```
 
 `tools/Build.ps1` findet auch die vorhandene Flutter-Installation unter dem Benutzerprofil oder `C:/dev/flutter`, führt die Prüfungen aus, baut beide Plattformen und legt die verteilbaren Dateien in `dist/` ab.
@@ -106,5 +110,7 @@ flutter build apk --release
 Windows benötigt die Visual-Studio-C++-Build-Tools. Android benötigt ein eingerichtetes Android-SDK, Java 17 und NDK 27.0.12077973. Offizielle Einrichtung: [Windows](https://docs.flutter.dev/platform-integration/windows/setup), [Android](https://docs.flutter.dev/platform-integration/android/setup). Ein zusätzlicher Web-Runner liegt für die Entwicklung bei.
 
 ## Prüfung
+
+Version 1.1: **21 automatisierte Tests bestanden**, darunter Überspringen in allen Modi, ein Punkt je richtiger Antwort mit und ohne Tipp sowie die Umrechnung alter Punktestände. Codeanalyse ohne Befund.
 
 Automatisierte Tests prüfen exakte Antworterkennung, das gesamte Originalblatt, alle Notengrenzen, adaptive Levelwechsel, mehrere tausend generierte Aufgaben, Bruchformen und das Speichern/Neuladen des Fortschritts. Bedienungstests führen alle 120 Originalaufgaben über die PC-Tastatur durch und prüfen kleine Bildschirme, Rechenhilfen, Abbrüche und den Timerablauf bei geöffneter Hilfe. Screenshots aus den Flutter-Bedienungstests liegen in `artifacts/screenshots/`. Die Release-Dateien werden für Windows und Android kompiliert; ein Test auf einem echten Android-Handy steht noch aus.

@@ -57,13 +57,46 @@ Future<void> screenshot(WidgetTester tester, String name) async {
   });
 }
 
-Future<void> openRun(WidgetTester tester, RunConfig config) async {
+Future<MemoryProgress> openRun(WidgetTester tester, RunConfig config) async {
+  final progress = MemoryProgress();
   final context = tester.element(find.byType(HomeScreen));
   Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => RunScreen(config: config, progress: MemoryProgress()),
+      builder: (_) => RunScreen(config: config, progress: progress),
     ),
   );
+  await tester.pumpAndSettle();
+  return progress;
+}
+
+// Solve the visible arithmetic independently of the app's answer checker.
+String visibleAnswer(WidgetTester tester) {
+  final pattern = RegExp(r'^(\d+) ([+−×÷]) (\d+)$');
+  final equation = tester
+      .widgetList<Text>(
+        find.descendant(
+          of: find.byType(RunScreen),
+          matching: find.byType(Text),
+        ),
+      )
+      .map((t) => t.data ?? '')
+      .firstWhere(pattern.hasMatch);
+  final match = pattern.firstMatch(equation)!;
+  final a = int.parse(match[1]!), b = int.parse(match[3]!);
+  return switch (match[2]) {
+    '+' => '${a + b}',
+    '−' => '${a - b}',
+    '×' => '${a * b}',
+    '÷' => '${a ~/ b}',
+    _ => throw StateError('Unexpected arithmetic'),
+  };
+}
+
+Future<void> enterAnswer(WidgetTester tester, String answer) async {
+  for (final ch in answer.split('')) {
+    await tester.sendKeyEvent(LogicalKeyboardKey.digit0, character: ch);
+  }
+  await tester.sendKeyEvent(LogicalKeyboardKey.enter);
   await tester.pumpAndSettle();
 }
 
@@ -163,7 +196,7 @@ void main() {
   ) async {
     await startApp(tester, size: const Size(360, 740));
     await openRun(tester, const RunConfig(mode: RunMode.training));
-    await tester.tap(find.text('Weiß ich noch nicht'));
+    await enterAnswer(tester, '999999');
     await tester.pumpAndSettle();
     expect(find.text('Noch nicht ganz. Wir üben das!'), findsOneWidget);
     await tester.tap(find.text('Zeig mir, wie das geht'));
@@ -211,7 +244,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Rechentipp'));
+    await tester.tap(find.text('Tipp holen'));
     await tester.pumpAndSettle();
     expect(find.text('Bud-E erklärt’s'), findsOneWidget);
     time = time.add(const Duration(minutes: 5));
@@ -220,6 +253,89 @@ void main() {
     expect(find.text('Run geschafft!'), findsOneWidget);
     expect(find.text('5-Minuten-Speedrun · vollständig'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  for (final mode in RunMode.values) {
+    testWidgets(
+      '${mode.name}: correct answers give one point; skip advances without points',
+      (tester) async {
+        await startApp(tester, size: const Size(320, 640));
+        final progress = await openRun(
+          tester,
+          RunConfig(
+            mode: mode,
+            level: 3,
+            original: mode == RunMode.test,
+            count: 120,
+            minutes: mode == RunMode.speed ? 5 : 0,
+          ),
+        );
+        for (var i = 0; i < 2; i++) {
+          await enterAnswer(tester, visibleAnswer(tester));
+          expect(progress.xp, i + 1);
+          await tester.tap(find.text('Weiter'));
+          await tester.pumpAndSettle();
+        }
+        if (mode != RunMode.test) {
+          final answer = visibleAnswer(tester);
+          // Both actions are reachable on a small phone without scrolling.
+          await tester.tap(find.text('Tipp holen'));
+          await tester.pumpAndSettle();
+          expect(find.text('Bud-E erklärt’s'), findsOneWidget);
+          await tester.ensureVisible(find.text('Alles klar, weiter!'));
+          await tester.tap(find.text('Alles klar, weiter!'));
+          await tester.pumpAndSettle();
+          await enterAnswer(tester, answer);
+          expect(progress.xp, 3);
+          expect(find.text('Richtig mit Hilfe. Gut geübt!'), findsOneWidget);
+          await tester.tap(find.text('Weiter'));
+          await tester.pumpAndSettle();
+        } else {
+          expect(find.text('Tipp holen'), findsNothing);
+        }
+        final correct = mode == RunMode.test ? 2 : 3;
+        await tester.tap(find.text('Überspringen'));
+        await tester.pumpAndSettle();
+        expect(progress.answered, correct + 1);
+        expect(progress.correct, correct);
+        expect(progress.xp, correct);
+        expect(find.text('Antwort gespeichert.'), findsNothing);
+        expect(
+          find.text(
+            mode == RunMode.test ? 'Antwort abgeben' : 'Antwort prüfen',
+          ),
+          findsOneWidget,
+        );
+        await enterAnswer(tester, '999999');
+        expect(progress.xp, correct);
+        expect(progress.answered, correct + 2);
+        await tester.ensureVisible(find.byTooltip('Run beenden'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Run beenden'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Beenden'));
+        await tester.pumpAndSettle();
+        expect(progress.runs.single['score'], correct);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  testWidgets('Skipping the last test task finishes with zero points', (
+    tester,
+  ) async {
+    await startApp(tester);
+    final progress = await openRun(
+      tester,
+      const RunConfig(mode: RunMode.test, count: 1),
+    );
+    await tester.tap(find.text('Überspringen'));
+    await tester.pumpAndSettle();
+    expect(find.text('0 von 1 Aufgaben richtig'), findsOneWidget);
+    expect(progress.xp, 0);
+    expect(progress.runs.single['score'], 0);
+    expect(progress.runs.single['completed'], true);
+    expect(find.textContaining('übersprungen'), findsOneWidget);
   });
 
   testWidgets('An unfinished speedrun does not count as a record', (
